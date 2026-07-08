@@ -1,0 +1,22 @@
+{
+  "name": "casuya-ecosystem",
+  "private": true,
+  "scripts": {
+    "install:all": "pnpm -r install",
+    "prepare": "node scripts/setup-hooks.js",
+    "bootstrap": "node scripts/run.js bootstrap",
+    "dev": "node scripts/run.js start",
+    "start": "node scripts/run.js start",
+    "stop": "node scripts/run.js stop",
+    "build": "node scripts/run.js build",
+    "clean": "node scripts/run.js clean",
+    "migrate": "node scripts/run.js migrate",
+    "seed": "node scripts/run.js seed",
+    "verify": "node scripts/run.js verify",
+    "doctor": "node scripts/run.js doctor",
+    "create-service": "pnpm --filter casuya-devtools build && node casuya-devtools/dist/cli/index.js create-service",
+    "validate:arch": "pnpm --filter casuya-devtools build && node casuya-devtools/dist/cli/index.js validate",
+    "dashboard": "pnpm --filter casuya-orchestrator dashboard",
+    "test": "pnpm -r test"
+  }
+}

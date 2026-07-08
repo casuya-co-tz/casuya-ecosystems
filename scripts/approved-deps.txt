@@ -1,0 +1,52 @@
+# Casuya approved runtime dependency allowlist
+# ---------------------------------------------------------------------------
+# Packages listed here (one per line) are permitted as runtime dependencies
+# across the workspace. `pnpm validate:arch` warns (or fails, when run with
+# ARCH_STRICT=1) when a package depends on something not on this list.
+#
+# Lines starting with # are comments. Glob patterns (e.g. @casuya/*) are allowed.
+#
+# To add a new approved dependency, append it here and commit with a changeset.
+
+# --- Workspace packages (always allowed) ---
+@casuya/*
+
+# --- Runtime frameworks & servers ---
+express
+apollo-server-express
+graphql
+graphql-tag
+ws
+cors
+helmet
+compression
+
+# --- Data & storage ---
+pg
+ioredis
+bullmq
+lunr
+zod
+dotenv
+
+# --- Auth & crypto ---
+jsonwebtoken
+bcrypt
+qrcode
+speakeasy
+
+# --- Observability & scheduling ---
+@opentelemetry/api
+@opentelemetry/sdk-node
+pino
+node-cron
+
+# --- DI / utilities ---
+inversify
+reflect-metadata
+semver
+uuid
+tslib
+glob
+commander
+sharp

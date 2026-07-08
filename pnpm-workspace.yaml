@@ -1,0 +1,35 @@
+packages:
+  - "casuya-*"
+
+# Shared dependency versions available via "catalog:" in any package.json.
+# Usage: "typescript": "catalog:"  (resolves to the version below)
+catalog:
+  typescript: ^5.3.3
+  vitest: ^1.2.0
+  eslint: ^8.56.0
+  "@typescript-eslint/eslint-plugin": ^6.18.0
+  "@typescript-eslint/parser": ^6.18.0
+
+# ---------------------------------------------------------------------------
+# Local Package Registry Convention (Priority 7)
+# ---------------------------------------------------------------------------
+# When a package depends on another package INSIDE this workspace, it MUST use
+# the pnpm workspace protocol so the local source is linked instead of the
+# public registry:
+#
+#   "dependencies": {
+#     "@casuya/common": "workspace:*"
+#   }
+#
+# Rules enforced by `pnpm validate:arch`:
+#   * Internal deps use "workspace:*"
+#   * No package depends on a non-existent casuya-* package
+#   * No circular dependencies between packages
+#   * Runtime deps must appear in scripts/approved-deps.txt
+#       - lenient (default): unapproved deps are warnings
+#       - strict (ARCH_STRICT=1): unapproved deps are errors (CI can opt in)
+# ---------------------------------------------------------------------------
+
+onlyBuiltDependencies:
+  - esbuild
+  - core-js

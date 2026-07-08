@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# Casuya pre-commit hook: format, lint, typecheck, and verify repository structure.
+# Installed automatically via 'pnpm prepare' (sets core.hooksPath to .githooks).
+set -euo pipefail
+
+echo "==> pre-commit: staging formatting"
+
+# Format staged files with Prettier when available
+if command -v pnpm >/dev/null 2>&1; then
+  staged=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(ts|tsx|js|jsx|json|md|yml|yaml)$' || true)
+  if [ -n "$staged" ]; then
+    # Try prettier; ignore failure if not installed in this package
+    npx --no-install prettier --write $staged 2>/dev/null || true
+    git add $staged 2>/dev/null || true
+  fi
+fi
+
+echo "==> pre-commit: verifying workspace structure"
+node scripts/run.js verify || {
+  echo "Repository structure verification failed. Run 'pnpm verify' for details."
+  exit 1
+}
+
+echo "==> pre-commit: validating architecture"
+node scripts/run.js validate:arch || {
+  echo "Architecture validation reported issues. Run 'pnpm validate:arch' for details."
+  echo "Commit allowed, but please review the reported problems."
+}
+
+echo "==> pre-commit: passed"

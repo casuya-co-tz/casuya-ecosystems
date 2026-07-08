@@ -1,0 +1,45 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+dist/
+build/
+*.tsbuildinfo
+.turbo/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+
+# Coverage
+coverage/
+.nyc_output/
+
+# Editor / OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+
+# Docker
+.docker/
+*.pid
+
+# Local dev runtime (pnpm start / pnpm stop)
+.dev-pids
+.dev-*.log
+

@@ -1,0 +1,87 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+    branches: [main, master, develop]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm -r build
+
+      - name: Typecheck
+        run: pnpm -r typecheck
+
+      - name: Lint
+        run: pnpm -r lint
+
+      - name: Test
+        run: pnpm -r test
+
+  consistency:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify every casuya-* repo has required files
+        run: |
+          missing=0
+          # Repos with purpose-built layouts exempt from strict checks:
+          #   casuya-deployment / casuya-docs -> infra/docs, no package manifest
+          #   casuya-design-system / casuya-platform -> nested/wrapper builds, no root tsconfig
+          #   casuya-core -> Python package (pyproject.toml, no package.json/tsconfig.json)
+          exempt="casuya-deployment/ casuya-docs/ casuya-design-system/ casuya-platform/ casuya-core/"
+          for d in casuya-*/; do
+            case "$exempt" in
+              *"$d"*) continue ;;
+            esac
+            # Baseline files every repository must have
+            for f in README.md LICENSE .gitignore package.json docs; do
+              if [ ! -e "$d$f" ]; then
+                echo "MISSING: $d$f"; missing=1
+              fi
+            done
+            # TypeScript packages must also provide a tsconfig.json
+            if [ -f "${d}package.json" ] && [ ! -f "${d}tsconfig.json" ]; then
+              echo "MISSING: ${d}tsconfig.json (TypeScript package)"; missing=1
+            fi
+          done
+          exit $missing
+
+  architecture:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate architecture
+        run: ARCH_STRICT=1 pnpm validate:arch
+
