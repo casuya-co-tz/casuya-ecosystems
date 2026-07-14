@@ -64,3 +64,6 @@
 [submodule "casuya-search"]
 	path = casuya-search
 	url = https://github.com/casuya-co-tz/casuya-search.git
+[submodule "casuya-math"]
+	path = casuya-math
+	url = https://github.com/casuya-co-tz/casuya-math.git
