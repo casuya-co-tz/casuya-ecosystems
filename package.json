@@ -18,5 +18,20 @@
     "validate:arch": "pnpm --filter @casuya/devtools build && node casuya-devtools/dist/cli/index.js validate",
     "dashboard": "pnpm --filter casuya-orchestrator dashboard",
     "test": "pnpm -r test"
+  },
+  "pnpm": {
+    "overrides": {
+      "vitest": ">=3.2.6",
+      "vite": ">=6.4.3",
+      "esbuild": ">=0.28.1",
+      "serialize-javascript": ">=7.0.5",
+      "tar": ">=7.5.16",
+      "minimatch": ">=9.0.7",
+      "micromatch": ">=4.0.8",
+      "yaml": ">=2.8.3",
+      "uuid": ">=11.1.1",
+      "@opentelemetry/sdk-node": ">=0.217.0",
+      "@opentelemetry/core": ">=2.8.0"
+    }
   }
 }
