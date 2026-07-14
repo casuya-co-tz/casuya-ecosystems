@@ -14,8 +14,8 @@
     "seed": "node scripts/run.js seed",
     "verify": "node scripts/run.js verify",
     "doctor": "node scripts/run.js doctor",
-    "create-service": "pnpm --filter casuya-devtools build && node casuya-devtools/dist/cli/index.js create-service",
-    "validate:arch": "pnpm --filter casuya-devtools build && node casuya-devtools/dist/cli/index.js validate",
+    "create-service": "pnpm --filter @casuya/devtools build && node casuya-devtools/dist/cli/index.js create-service",
+    "validate:arch": "pnpm --filter @casuya/devtools build && node casuya-devtools/dist/cli/index.js validate",
     "dashboard": "pnpm --filter casuya-orchestrator dashboard",
     "test": "pnpm -r test"
   }
