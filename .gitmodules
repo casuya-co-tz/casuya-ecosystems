@@ -1,0 +1,66 @@
+[submodule "casuya-ai"]
+	path = casuya-ai
+	url = https://github.com/casuya-co-tz/casuya-ai.git
+[submodule "casuya-analytics"]
+	path = casuya-analytics
+	url = https://github.com/casuya-co-tz/casuya-analytics.git
+[submodule "casuya-api"]
+	path = casuya-api
+	url = https://github.com/casuya-co-tz/casuya-api.git
+[submodule "casuya-auth"]
+	path = casuya-auth
+	url = https://github.com/casuya-co-tz/casuya-auth.git
+[submodule "casuya-bridge"]
+	path = casuya-bridge
+	url = https://github.com/casuya-co-tz/casuya-bridge.git
+[submodule "casuya-common"]
+	path = casuya-common
+	url = https://github.com/casuya-co-tz/casuya-common.git
+[submodule "casuya-content"]
+	path = casuya-content
+	url = https://github.com/casuya-co-tz/casuya-content.git
+[submodule "casuya-core"]
+	path = casuya-core
+	url = https://github.com/casuya-co-tz/casuya-core.git
+[submodule "casuya-deployment"]
+	path = casuya-deployment
+	url = https://github.com/casuya-co-tz/casuya-deployment.git
+[submodule "casuya-design-system"]
+	path = casuya-design-system
+	url = https://github.com/casuya-co-tz/casuya-design-system.git
+[submodule "casuya-devtools"]
+	path = casuya-devtools
+	url = https://github.com/casuya-co-tz/casuya-devtools.git
+[submodule "casuya-docs"]
+	path = casuya-docs
+	url = https://github.com/casuya-co-tz/casuya-docs.git
+[submodule "casuya-editor"]
+	path = casuya-editor
+	url = https://github.com/casuya-co-tz/casuya-editor.git
+[submodule "casuya-exams"]
+	path = casuya-exams
+	url = https://github.com/casuya-co-tz/casuya-exams.git
+[submodule "casuya-media"]
+	path = casuya-media
+	url = https://github.com/casuya-co-tz/casuya-media.git
+[submodule "casuya-notifications"]
+	path = casuya-notifications
+	url = https://github.com/casuya-co-tz/casuya-notifications.git
+[submodule "casuya-orchestrator"]
+	path = casuya-orchestrator
+	url = https://github.com/casuya-co-tz/casuya-orchestrator.git
+[submodule "casuya-payments"]
+	path = casuya-payments
+	url = https://github.com/casuya-co-tz/casuya-payments.git
+[submodule "casuya-platform"]
+	path = casuya-platform
+	url = https://github.com/casuya-co-tz/casuya-platform.git
+[submodule "casuya-runtime"]
+	path = casuya-runtime
+	url = https://github.com/casuya-co-tz/casuya-runtime.git
+[submodule "casuya-sdk"]
+	path = casuya-sdk
+	url = https://github.com/casuya-co-tz/casuya-sdk.git
+[submodule "casuya-search"]
+	path = casuya-search
+	url = https://github.com/casuya-co-tz/casuya-search.git

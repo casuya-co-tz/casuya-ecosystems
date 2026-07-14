@@ -50,3 +50,6 @@ tslib
 glob
 commander
 sharp
+
+# --- STEM rendering ---
+katex

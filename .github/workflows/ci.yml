@@ -11,6 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - uses: pnpm/action-setup@v4
         with:
@@ -40,6 +42,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: recursive
       - name: Verify every casuya-* repo has required files
         run: |
           missing=0
@@ -52,6 +56,10 @@ jobs:
             case "$exempt" in
               *"$d"*) continue ;;
             esac
+            # Skip empty directories (e.g. submodule dirs that failed to checkout)
+            if [ -z "$(ls -A "$d" 2>/dev/null)" ]; then
+              echo "SKIP (empty): $d"; continue
+            fi
             # Baseline files every repository must have
             for f in README.md LICENSE .gitignore package.json docs; do
               if [ ! -e "$d$f" ]; then
@@ -69,6 +77,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - uses: pnpm/action-setup@v4
         with:
@@ -84,4 +94,3 @@ jobs:
 
       - name: Validate architecture
         run: ARCH_STRICT=1 pnpm validate:arch
-
