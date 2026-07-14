@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Animated Quadratic Equation Lesson</title>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      startup: {
+        ready: function () {
+          MathJax.startup.defaultReady();
+          MathJax.startup.promise.then(function () {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('content').style.opacity = '1';
+          });
+        }
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Times New Roman', Times, serif;
+      background: #f0f2f5;
+      color: #222;
+      padding: 40px 20px;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    #loading {
+      text-align: center;
+      padding: 60px 20px;
+      font-family: Arial, sans-serif;
+      font-size: 1rem;
+      color: #666;
+    }
+    #loading .spinner {
+      width: 40px; height: 40px;
+      border: 4px solid #e0e0e0;
+      border-top-color: #0066cc;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 16px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    #content {
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .board {
+      background: #ffffff;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 40px 44px;
+      max-width: 780px;
+      margin: 0 auto;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+    }
+
+    h1 {
+      font-family: Arial, sans-serif;
+      font-size: 1.8rem;
+      text-align: center;
+      color: #111;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #888;
+      margin-bottom: 32px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid #e0e0e0;
+    }
+
+    .equation-box {
+      background: #f8f9fa;
+      border-left: 4px solid #0066cc;
+      padding: 18px 22px;
+      margin-bottom: 36px;
+      font-size: 1.05rem;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .step {
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      margin: 28px 0;
+      padding-bottom: 18px;
+      border-bottom: 1px dashed #eee;
+    }
+    .step:last-of-type { border-bottom: none; }
+
+    .step.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .step-header {
+      font-family: Arial, sans-serif;
+      font-weight: bold;
+      color: #0066cc;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .step-body { font-size: 1.05rem; }
+
+    .math-display {
+      margin: 14px 0;
+      text-align: center;
+      font-size: 1.1rem;
+    }
+
+    .highlight {
+      background: #fffbe6;
+      border: 1px solid #ffe58f;
+      border-radius: 4px;
+      padding: 14px 18px;
+      margin: 14px 0;
+      text-align: center;
+    }
+
+    .controls {
+      text-align: center;
+      margin-top: 40px;
+      padding-top: 24px;
+      border-top: 2px solid #e0e0e0;
+    }
+
+    .progress-bar-container {
+      max-width: 400px;
+      margin: 0 auto 24px;
+      height: 6px;
+      background: #e0e0e0;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      background: #0066cc;
+      border-radius: 3px;
+      transition: width 0.4s ease;
+      width: 0%;
+    }
+
+    .step-counter {
+      font-family: Arial, sans-serif;
+      font-size: 0.85rem;
+      color: #999;
+      margin-bottom: 16px;
+    }
+
+    button {
+      font-family: Arial, sans-serif;
+      padding: 11px 24px;
+      margin: 0 8px;
+      border: none;
+      border-radius: 5px;
+      background: #0066cc;
+      color: #fff;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: bold;
+      transition: background 0.2s, transform 0.1s;
+    }
+    button:hover { background: #0052a3; }
+    button:active { transform: scale(0.97); }
+    button:disabled {
+      background: #ebebeb;
+      color: #999;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .note {
+      font-family: Arial, sans-serif;
+      font-size: 0.82rem;
+      color: #999;
+      margin-top: 18px;
+      text-align: center;
+      font-style: italic;
+    }
+
+    /* Overflow math on small screens */
+    .math-display, .equation-box, .highlight {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* Tablet: 768px and below */
+    @media (max-width: 768px) {
+      body { padding: 20px 12px; }
+
+      .board {
+        padding: 28px 20px;
+        border-radius: 6px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+      }
+
+      h1 { font-size: 1.4rem; margin-bottom: 6px; }
+      .subtitle { font-size: 0.82rem; margin-bottom: 24px; padding-bottom: 16px; }
+
+      .equation-box { padding: 14px 16px; font-size: 0.98rem; margin-bottom: 28px; }
+
+      .step { margin: 22px 0; padding-bottom: 14px; }
+      .step-header { font-size: 0.88rem; }
+      .step-body { font-size: 0.98rem; }
+      .math-display { font-size: 1rem; margin: 10px 0; }
+
+      .highlight { padding: 12px 14px; }
+
+      .controls { margin-top: 30px; padding-top: 18px; }
+
+      .progress-bar-container { max-width: 100%; margin-bottom: 18px; }
+
+      button {
+        padding: 10px 18px;
+        font-size: 0.85rem;
+        margin: 0 5px;
+      }
+    }
+
+    /* Mobile: 480px and below */
+    @media (max-width: 480px) {
+      body { padding: 12px 8px; }
+
+      .board {
+        padding: 20px 14px;
+        border-radius: 4px;
+      }
+
+      h1 { font-size: 1.15rem; line-height: 1.4; }
+      .subtitle { font-size: 0.78rem; margin-bottom: 18px; padding-bottom: 14px; }
+
+      .equation-box { padding: 12px 12px; font-size: 0.92rem; margin-bottom: 22px; }
+
+      .step { margin: 18px 0; padding-bottom: 12px; }
+      .step-header { font-size: 0.82rem; }
+      .step-body { font-size: 0.92rem; }
+      .math-display { font-size: 0.92rem; margin: 8px 0; }
+
+      .highlight { padding: 10px 10px; }
+
+      .controls { margin-top: 24px; padding-top: 14px; }
+
+      .step-counter { font-size: 0.78rem; margin-bottom: 12px; }
+
+      button {
+        padding: 10px 16px;
+        font-size: 0.82rem;
+        margin: 0 4px;
+        min-width: 100px;
+      }
+
+      .note { font-size: 0.75rem; margin-top: 14px; }
+    }
+
+    /* Very small: 360px and below */
+    @media (max-width: 360px) {
+      .board { padding: 16px 10px; }
+      h1 { font-size: 1.05rem; }
+      .step-body { font-size: 0.88rem; }
+      button {
+        padding: 9px 12px;
+        font-size: 0.78rem;
+        min-width: 80px;
+        margin: 3px 2px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="loading">
+    <div class="spinner"></div>
+    Loading math renderer...
+  </div>
+
+  <div id="content">
+    <div class="board">
+      <h1>Solving Quadratic Equations via the Algebraic Formula</h1>
+      <div class="subtitle">Interactive Step-by-Step Derivation</div>
+
+      <div class="equation-box">
+        Given the second-degree polynomial equation:
+        $$\mathbf{2x^2 + 3x - 2 = 0}$$
+        Find all real values of $x$ that satisfy the proposition.
+      </div>
+
+      <div class="progress-bar-container">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+      <div class="step-counter" id="stepCounter">Step 0 / 7</div>
+
+      <div id="steps">
+
+        <div class="step">
+          <span class="step-header">Step 1: Identify Coefficients</span>
+          <div class="step-body">
+            Map the given equation to the standard quadratic form $ax^2 + bx + c = 0$. By standard comparison, we extract the structural coefficients:
+            <div class="math-display">
+              $a = 2, \quad b = 3, \quad c = -2$
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <span class="step-header">Step 2: State the Quadratic Formula</span>
+          <div class="step-body">
+            By the method of completing the square, the generic solutions for any quadratic equation are given by the Quadratic Formula:
+            <div class="math-display">
+              $$x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$$
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <span class="step-header">Step 3: Algebraic Substitution</span>
+          <div class="step-body">
+            Substitute the mapped coefficients into the structural framework of the formula:
+            <div class="math-display">
+              $$x = \frac{-(3) \pm \sqrt{(3)^2 - 4(2)(-2)}}{2(2)}$$
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <span class="step-header">Step 4: Evaluate the Discriminant</span>
+          <div class="step-body">
+            Isolate and evaluate the radicand argument, known as the discriminant $\Delta = b^2 - 4ac$:
+            <div class="math-display">
+              $$\Delta = 3^2 - 4(2)(-2) = 9 - (-16) = 9 + 16 = 25$$
+            </div>
+            Since $\Delta > 0$, the equation yields two distinct real roots.
+          </div>
+        </div>
+
+        <div class="step">
+          <span class="step-header">Step 5: Radical Simplification</span>
+          <div class="step-body">
+            Reintroduce the evaluated discriminant back into the radical expression:
+            <div class="math-display">
+              $$x = \frac{-3 \pm \sqrt{25}}{4}$$
+            </div>
+            Evaluating the perfect square yields $\sqrt{25} = 5$:
+            <div class="math-display">
+              $$x = \frac{-3 \pm 5}{4}$$
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <span class="step-header">Step 6: Branch Solution Space</span>
+          <div class="step-body">
+            Partition the equation into its two canonical solution branches:
+            <div class="math-display">
+              $$x_1 = \frac{-3 + 5}{4} = \frac{2}{4} = \frac{1}{2}$$
+            </div>
+            <div class="math-display">
+              $$x_2 = \frac{-3 - 5}{4} = \frac{-8}{4} = -2$$
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <span class="step-header">Final Solution Set</span>
+          <div class="step-body">
+            The solution set $S$ containing the valid roots for the quadratic function is:
+            <div class="highlight">
+              $$\mathbf{S = \left\{ \frac{1}{2}, \; -2 \right\}}$$
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="controls">
+        <button id="prevBtn" disabled>Previous Step</button>
+        <button id="nextBtn">Next Step</button>
+      </div>
+
+      <div class="note">
+        Interactive Instruction Board &mdash; Progress through the pedagogical derivation steps chronologically.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    var steps = document.querySelectorAll('.step');
+    var nextBtn = document.getElementById('nextBtn');
+    var prevBtn = document.getElementById('prevBtn');
+    var progressBar = document.getElementById('progressBar');
+    var stepCounter = document.getElementById('stepCounter');
+    var currentStep = 0;
+    var total = steps.length;
+
+    function updateUI() {
+      for (var i = 0; i < total; i++) {
+        if (i <= currentStep) {
+          steps[i].classList.add('visible');
+        } else {
+          steps[i].classList.remove('visible');
+        }
+      }
+      prevBtn.disabled = currentStep === 0;
+      nextBtn.disabled = currentStep === total - 1;
+      progressBar.style.width = ((currentStep + 1) / total * 100) + '%';
+      stepCounter.textContent = 'Step ' + (currentStep + 1) + ' / ' + total;
+
+      if (typeof MathJax !== 'undefined' && MathJax.typeset) {
+        MathJax.typeset();
+      }
+    }
+
+    nextBtn.addEventListener('click', function () {
+      if (currentStep < total - 1) {
+        currentStep++;
+        updateUI();
+        steps[currentStep].scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    });
+
+    prevBtn.addEventListener('click', function () {
+      if (currentStep > 0) {
+        currentStep--;
+        updateUI();
+        steps[currentStep].scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    });
+
+    updateUI();
+  </script>
+</body>
+</html>
