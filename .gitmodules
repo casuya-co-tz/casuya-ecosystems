@@ -67,3 +67,9 @@
 [submodule "casuya-math"]
 	path = casuya-math
 	url = https://github.com/casuya-co-tz/casuya-math.git
+[submodule "casuya-blackboard"]
+	path = casuya-blackboard
+	url = https://github.com/casuya-co-tz/casuya-blackboard.git
+[submodule "casuya-services-bridge"]
+	path = casuya-services-bridge
+	url = https://github.com/casuya-co-tz/casuya-services-bridge.git
