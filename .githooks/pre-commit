@@ -22,7 +22,7 @@ node scripts/run.js verify || {
 }
 
 echo "==> pre-commit: validating architecture"
-node scripts/run.js validate:arch || {
+pnpm validate:arch || {
   echo "Architecture validation reported issues. Run 'pnpm validate:arch' for details."
   echo "Commit allowed, but please review the reported problems."
 }
