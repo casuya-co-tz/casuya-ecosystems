@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
-# Casuya pre-commit hook: format, lint, typecheck, and verify repository structure.
+# Casuya pre-commit hook: lightweight formatting only.
+# Full typecheck/build/test validation belongs in CI (GitHub Actions), not here.
 # Installed automatically via 'pnpm prepare' (sets core.hooksPath to .githooks).
 set -euo pipefail
 
-echo "==> pre-commit: staging formatting"
+echo "==> pre-commit: formatting staged files"
 
 # Format staged files with Prettier when available
 if command -v pnpm >/dev/null 2>&1; then
@@ -15,16 +16,4 @@ if command -v pnpm >/dev/null 2>&1; then
   fi
 fi
 
-echo "==> pre-commit: verifying workspace structure"
-node scripts/run.js verify || {
-  echo "Repository structure verification failed. Run 'pnpm verify' for details."
-  exit 1
-}
-
-echo "==> pre-commit: validating architecture"
-pnpm validate:arch || {
-  echo "Architecture validation reported issues. Run 'pnpm validate:arch' for details."
-  echo "Commit allowed, but please review the reported problems."
-}
-
-echo "==> pre-commit: passed"
+echo "==> pre-commit: passed (full verify runs in CI)"
