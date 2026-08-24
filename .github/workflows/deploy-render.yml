@@ -1,0 +1,63 @@
+name: Deploy to Render
+
+on:
+  push:
+    branches: [main, master, develop]
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm -r build
+
+      - name: Typecheck
+        run: pnpm -r typecheck
+
+      - name: Lint
+        run: pnpm -r lint
+
+      - name: Test
+        run: pnpm -r test
+
+  # Render auto-deploys on push when connected to GitHub.
+  # This job triggers the deploy hook for explicit CD control.
+  deploy:
+    needs: verify
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    steps:
+      - name: Trigger Render Deploy (casuya-ai)
+        if: env.DEPLOY_HOOK_AI != ''
+        env:
+          DEPLOY_HOOK_AI: ${{ secrets.RENDER_DEPLOY_HOOK_AI }}
+        run: curl -X POST "$DEPLOY_HOOK_AI"
+
+      - name: Trigger Render Deploy (casuya-api)
+        if: env.DEPLOY_HOOK_API != ''
+        env:
+          DEPLOY_HOOK_API: ${{ secrets.RENDER_DEPLOY_HOOK_API }}
+        run: curl -X POST "$DEPLOY_HOOK_API"
+
+      - name: Trigger Render Deploy (casuya-orchestrator)
+        if: env.DEPLOY_HOOK_ORCH != ''
+        env:
+          DEPLOY_HOOK_ORCH: ${{ secrets.RENDER_DEPLOY_HOOK_ORCH }}
+        run: curl -X POST "$DEPLOY_HOOK_ORCH"
