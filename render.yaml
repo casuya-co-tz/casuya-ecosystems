@@ -12,7 +12,7 @@ services:
     name: casuya-ai
     runtime: docker
     dockerfilePath: ./casuya-ai/Dockerfile
-    plan: hobby
+    plan: free
     region: frankfurt
     healthCheckPath: /health
     envVars:
@@ -28,7 +28,7 @@ services:
     name: casuya-api
     runtime: docker
     dockerfilePath: ./casuya-api/Dockerfile
-    plan: hobby
+    plan: starter
     region: frankfurt
     healthCheckPath: /health
     envVars:
@@ -52,7 +52,7 @@ services:
     name: casuya-orchestrator
     runtime: docker
     dockerfilePath: ./casuya-orchestrator/Dockerfile
-    plan: hobby
+    plan: free
     region: frankfurt
     envVars:
       - key: NODE_ENV
@@ -72,8 +72,8 @@ databases:
   # ── PostgreSQL ───────────────────────────────────────────────────────────
   - name: casuya-postgres
     databaseName: casuya
-    plan: hobby
+    plan: free
 
   # ── Redis ────────────────────────────────────────────────────────────────
   - name: casuya-redis
-    plan: hobby
+    plan: free
