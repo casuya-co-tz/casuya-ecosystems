@@ -1,0 +1,98 @@
+name: Deploy to Railway
+
+on:
+  push:
+    branches: [main, master, develop]
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm -r build
+
+      - name: Typecheck
+        run: pnpm -r typecheck
+
+      - name: Lint
+        run: pnpm -r lint
+
+      - name: Test
+        run: pnpm -r test
+
+  deploy-ai:
+    needs: verify
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+
+      - name: Deploy casuya-ai
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          cd casuya-ai
+          railway link --project casuya-ecosystem --service casuya-ai || true
+          railway up --detach
+
+  deploy-api:
+    needs: verify
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+
+      - name: Deploy casuya-api
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          cd casuya-api
+          railway link --project casuya-ecosystem --service casuya-api || true
+          railway up --detach
+
+  deploy-orchestrator:
+    needs: verify
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+
+      - name: Deploy casuya-orchestrator
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          cd casuya-orchestrator
+          railway link --project casuya-ecosystem --service casuya-orchestrator || true
+          railway up --detach
