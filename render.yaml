@@ -28,7 +28,7 @@ services:
     name: casuya-api
     runtime: docker
     dockerfilePath: ./casuya-api/Dockerfile
-    plan: starter
+    plan: free
     region: frankfurt
     healthCheckPath: /health
     envVars:
