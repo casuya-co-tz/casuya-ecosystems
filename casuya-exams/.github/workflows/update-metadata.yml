@@ -1,0 +1,42 @@
+name: Update GitHub Metadata
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  update-metadata:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Update repository metadata
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          DESCRIPTION="Examination Department for the Casuya platform. Complete digital assessment capabilities including question banks, exam generation, scheduling, exam sessions, auto-grading, reports, certificates, analytics, and security."
+
+          curl -X PATCH \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github.v3+json" \
+            -d "{
+              \"description\": \"$DESCRIPTION\",
+              \"homepage\": \"https://casuya.co.tz\",
+              \"topics\": [
+                \"exams\",
+                \"assessment\",
+                \"education\",
+                \"grading\",
+                \"question-bank\",
+                \"certification\",
+                \"typescript\",
+                \"testing\",
+                \"casuya\",
+                \"educational-content\"
+              ],
+              \"has_wiki\": false,
+              \"has_projects\": true,
+              \"has_issues\": true
+            }" \
+            https://api.github.com/repos/casuya-co-tz/casuya-exams

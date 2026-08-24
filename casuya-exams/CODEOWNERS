@@ -1,0 +1,23 @@
+# Code Owners
+
+This file defines who owns which parts of the codebase.
+
+# Global owners
+* @casuya/core-team
+
+# Module owners
+src/question-bank/ @casuya/exams-team
+src/exam-builder/ @casuya/exams-team
+src/scheduling/ @casuya/exams-team
+src/sessions/ @casuya/exams-team
+src/grading/ @casuya/exams-team
+src/reports/ @casuya/exams-team
+src/certificates/ @casuya/exams-team
+src/analytics/ @casuya/data-team
+src/security/ @casuya/security-team
+
+# Documentation
+*.md @casuya/docs-team
+
+# Tests
+tests/ @casuya/qa-team

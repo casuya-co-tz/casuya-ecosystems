@@ -1,0 +1,22 @@
+# Code Owners
+
+This file defines who owns which parts of the codebase.
+
+# Global owners
+* @casuya/core-team
+
+# Module owners
+src/indexing/ @casuya/search-team
+src/ranking/ @casuya/search-team
+src/suggestions/ @casuya/search-team
+src/filters/ @casuya/search-team
+src/recommendations/ @casuya/ml-team
+src/caching/ @casuya/infra-team
+src/search-api/ @casuya/api-team
+src/analytics/ @casuya/data-team
+
+# Documentation
+*.md @casuya/docs-team
+
+# Tests
+tests/ @casuya/qa-team

@@ -1,0 +1,43 @@
+name: Update GitHub Metadata
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  update-metadata:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Update repository metadata
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          DESCRIPTION="Educational content search and discovery system for the Casuya platform. Full-text search, ranking algorithms, autocomplete, filtering, recommendations, caching, and analytics."
+
+          curl -X PATCH \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github.v3+json" \
+            -d "{
+              \"description\": \"$DESCRIPTION\",
+              \"homepage\": \"https://casuya.co.tz\",
+              \"topics\": [
+                \"search\",
+                \"education\",
+                \"full-text-search\",
+                \"lunr\",
+                \"typescript\",
+                \"ranking\",
+                \"recommendations\",
+                \"autocomplete\",
+                \"caching\",
+                \"analytics\",
+                \"educational-content\"
+              ],
+              \"has_wiki\": false,
+              \"has_projects\": true,
+              \"has_issues\": true
+            }" \
+            https://api.github.com/repos/casuya-co-tz/casuya-search

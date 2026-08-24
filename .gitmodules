@@ -1,24 +1,12 @@
 [submodule "casuya-ai"]
 	path = casuya-ai
 	url = https://github.com/casuya-co-tz/casuya-ai.git
-[submodule "casuya-analytics"]
-	path = casuya-analytics
-	url = https://github.com/casuya-co-tz/casuya-analytics.git
 [submodule "casuya-api"]
 	path = casuya-api
 	url = https://github.com/casuya-co-tz/casuya-api.git
-[submodule "casuya-auth"]
-	path = casuya-auth
-	url = https://github.com/casuya-co-tz/casuya-auth.git
 [submodule "casuya-bridge"]
 	path = casuya-bridge
 	url = https://github.com/casuya-co-tz/casuya-bridge.git
-[submodule "casuya-common"]
-	path = casuya-common
-	url = https://github.com/casuya-co-tz/casuya-common.git
-[submodule "casuya-content"]
-	path = casuya-content
-	url = https://github.com/casuya-co-tz/casuya-content.git
 [submodule "casuya-core"]
 	path = casuya-core
 	url = https://github.com/casuya-co-tz/casuya-core.git
@@ -37,12 +25,6 @@
 [submodule "casuya-editor"]
 	path = casuya-editor
 	url = https://github.com/casuya-co-tz/casuya-editor.git
-[submodule "casuya-exams"]
-	path = casuya-exams
-	url = https://github.com/casuya-co-tz/casuya-exams.git
-[submodule "casuya-media"]
-	path = casuya-media
-	url = https://github.com/casuya-co-tz/casuya-media.git
 [submodule "casuya-notifications"]
 	path = casuya-notifications
 	url = https://github.com/casuya-co-tz/casuya-notifications.git
@@ -61,12 +43,6 @@
 [submodule "casuya-sdk"]
 	path = casuya-sdk
 	url = https://github.com/casuya-co-tz/casuya-sdk.git
-[submodule "casuya-search"]
-	path = casuya-search
-	url = https://github.com/casuya-co-tz/casuya-search.git
-[submodule "casuya-math"]
-	path = casuya-math
-	url = https://github.com/casuya-co-tz/casuya-math.git
 [submodule "casuya-blackboard"]
 	path = casuya-blackboard
 	url = https://github.com/casuya-co-tz/casuya-blackboard.git
