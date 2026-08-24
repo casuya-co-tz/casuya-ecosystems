@@ -1,0 +1,31 @@
+{
+  "name": "casuya-services-bridge",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Bridge microservice hosting casuya-content, casuya-exams, casuya-media, casuya-auth, casuya-analytics, casuya-search",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "cors": "^2.8.5",
+    "helmet": "^8.0.0",
+    "morgan": "^1.10.0",
+    "@casuya/content": "workspace:*",
+    "casuya-exams": "workspace:*",
+    "casuya-media": "workspace:*",
+    "@casuya/auth": "workspace:*",
+    "@casuya/analytics": "workspace:*",
+    "casuya-search": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.0",
+    "@types/cors": "^2.8.0",
+    "@types/morgan": "^1.9.0",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}

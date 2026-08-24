@@ -1,0 +1,50 @@
+{
+  "name": "@casuya/payments",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Casuya Payments microservice — subscriptions, invoicing, refunds, multi-provider payments",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/src/server.js",
+    "dev": "tsx src/server.ts",
+    "test": "jest --passWithNoTests",
+    "test:coverage": "jest --coverage --passWithNoTests",
+    "lint": "eslint src/ --ext .ts",
+    "lint:fix": "eslint src/ --ext .ts --fix",
+    "clean": "rimraf dist coverage",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "casuya",
+    "payments",
+    "subscriptions",
+    "invoicing",
+    "azampay"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@casuya/common": "workspace:*",
+    "cors": "^2.8.5",
+    "express": "^4.21.0",
+    "helmet": "^8.0.0",
+    "morgan": "^1.10.0",
+    "sql.js": "^1.14.1"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.0",
+    "@types/express": "^5.0.0",
+    "@types/jest": "^29.5.0",
+    "@types/morgan": "^1.9.0",
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.40.0",
+    "jest": "^29.5.0",
+    "rimraf": "^5.0.0",
+    "ts-jest": "^29.1.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.0.0"
+  }
+}

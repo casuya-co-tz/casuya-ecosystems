@@ -1,9 +1,6 @@
 [submodule "casuya-ai"]
 	path = casuya-ai
 	url = https://github.com/casuya-co-tz/casuya-ai.git
-[submodule "casuya-api"]
-	path = casuya-api
-	url = https://github.com/casuya-co-tz/casuya-api.git
 [submodule "casuya-bridge"]
 	path = casuya-bridge
 	url = https://github.com/casuya-co-tz/casuya-bridge.git
@@ -31,9 +28,6 @@
 [submodule "casuya-orchestrator"]
 	path = casuya-orchestrator
 	url = https://github.com/casuya-co-tz/casuya-orchestrator.git
-[submodule "casuya-payments"]
-	path = casuya-payments
-	url = https://github.com/casuya-co-tz/casuya-payments.git
 [submodule "casuya-platform"]
 	path = casuya-platform
 	url = https://github.com/casuya-co-tz/casuya-platform.git
@@ -46,6 +40,3 @@
 [submodule "casuya-blackboard"]
 	path = casuya-blackboard
 	url = https://github.com/casuya-co-tz/casuya-blackboard.git
-[submodule "casuya-services-bridge"]
-	path = casuya-services-bridge
-	url = https://github.com/casuya-co-tz/casuya-services-bridge.git
