@@ -1,4 +1,4 @@
-name: Deploy to Render
+name: Deploy to Railway
 
 on:
   push:
@@ -37,27 +37,12 @@ jobs:
       - name: Test
         run: pnpm -r test
 
-  # Render auto-deploys on push when connected to GitHub.
-  # This job triggers the deploy hook for explicit CD control.
+  # Railway auto-deploys on push when connected to GitHub.
+  # This job is a placeholder for explicit CD control via Railway CLI if needed.
   deploy:
     needs: verify
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
     steps:
-      - name: Trigger Render Deploy (casuya-ai)
-        if: env.DEPLOY_HOOK_AI != ''
-        env:
-          DEPLOY_HOOK_AI: ${{ secrets.RENDER_DEPLOY_HOOK_AI }}
-        run: curl -X POST "$DEPLOY_HOOK_AI"
-
-      - name: Trigger Render Deploy (casuya-api)
-        if: env.DEPLOY_HOOK_API != ''
-        env:
-          DEPLOY_HOOK_API: ${{ secrets.RENDER_DEPLOY_HOOK_API }}
-        run: curl -X POST "$DEPLOY_HOOK_API"
-
-      - name: Trigger Render Deploy (casuya-orchestrator)
-        if: env.DEPLOY_HOOK_ORCH != ''
-        env:
-          DEPLOY_HOOK_ORCH: ${{ secrets.RENDER_DEPLOY_HOOK_ORCH }}
-        run: curl -X POST "$DEPLOY_HOOK_ORCH"
+      - name: Railway Deploy Notification
+        run: echo "Railway auto-deploys from GitHub. No manual step required."
