@@ -714,14 +714,17 @@
         btn.classList.toggle('active', vals[i]);
       });
 
-      document.getElementById('a11y-dyslexia').setAttribute('aria-pressed', state.dyslexia);
-      document.getElementById('a11y-contrast').setAttribute('aria-pressed', state.highContrast);
-      document.getElementById('a11y-large-text').setAttribute('aria-pressed', state.largeText);
-      document.getElementById('a11y-wide-spacing').setAttribute('aria-pressed', state.wideSpacing);
-      document.getElementById('a11y-tts').setAttribute('aria-pressed', state.tts);
+      var ariaIds = ['a11y-dyslexia', 'a11y-contrast', 'a11y-large-text', 'a11y-wide-spacing', 'a11y-tts'];
+      var ariaKeys = ['dyslexia', 'highContrast', 'largeText', 'wideSpacing', 'tts'];
+      ariaIds.forEach(function (id, i) {
+        var el = document.getElementById(id);
+        if (el) el.setAttribute('aria-pressed', state[ariaKeys[i]]);
+      });
 
-      document.getElementById('a11y-speed-row').style.display = state.tts ? 'flex' : 'none';
-      document.getElementById('speech-controls').style.display = state.tts ? 'flex' : 'none';
+      var speedRow = document.getElementById('a11y-speed-row');
+      var speechCtrl = document.getElementById('speech-controls');
+      if (speedRow) speedRow.style.display = state.tts ? 'flex' : 'none';
+      if (speechCtrl) speechCtrl.style.display = state.tts ? 'flex' : 'none';
 
       var fontSlider = document.getElementById('a11y-fontsize');
       var fontLabel = document.getElementById('a11y-fontsize-label');
@@ -740,25 +743,27 @@
     var toggleBtn = document.getElementById('a11y-toggle-btn');
     var panel = document.getElementById('a11y-panel');
 
-    toggleBtn.addEventListener('click', function () {
-      var isOpen = panel.classList.toggle('open');
-      toggleBtn.setAttribute('aria-expanded', isOpen);
-    });
+    if (toggleBtn && panel) {
+      toggleBtn.addEventListener('click', function () {
+        var isOpen = panel.classList.toggle('open');
+        toggleBtn.setAttribute('aria-expanded', isOpen);
+      });
 
-    document.addEventListener('click', function (e) {
-      if (!panel.contains(e.target) && e.target !== toggleBtn) {
-        panel.classList.remove('open');
-        toggleBtn.setAttribute('aria-expanded', 'false');
-      }
-    });
+      document.addEventListener('click', function (e) {
+        if (!panel.contains(e.target) && !toggleBtn.contains(e.target)) {
+          panel.classList.remove('open');
+          toggleBtn.setAttribute('aria-expanded', 'false');
+        }
+      });
 
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && panel.classList.contains('open')) {
-        panel.classList.remove('open');
-        toggleBtn.setAttribute('aria-expanded', 'false');
-        toggleBtn.focus();
-      }
-    });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && panel.classList.contains('open')) {
+          panel.classList.remove('open');
+          toggleBtn.setAttribute('aria-expanded', 'false');
+          toggleBtn.focus();
+        }
+      });
+    }
 
     // ── Toggle handlers ───────────────────────────────────────
     document.getElementById('a11y-dyslexia').addEventListener('click', function () {
@@ -786,10 +791,12 @@
     // ── Font size slider ─────────────────────────────────────
     var fontSlider = document.getElementById('a11y-fontsize');
     var fontLabel = document.getElementById('a11y-fontsize-label');
-    fontSlider.addEventListener('input', function () {
-      state.fontSize = parseInt(this.value);
-      applyState();
-    });
+    if (fontSlider) {
+      fontSlider.addEventListener('input', function () {
+        state.fontSize = parseInt(this.value);
+        applyState();
+      });
+    }
 
     // ── Keyboard support for a11y options ─────────────────────
     document.querySelectorAll('.a11y-option').forEach(function (el) {
@@ -804,11 +811,13 @@
     // ── Speech rate slider ────────────────────────────────────
     var speedSlider = document.getElementById('a11y-speed');
     var speedLabel = document.getElementById('a11y-speed-label');
-    speedSlider.addEventListener('input', function () {
-      state.speechRate = parseFloat(this.value);
-      speedLabel.textContent = state.speechRate.toFixed(1) + 'x';
-      saveState();
-    });
+    if (speedSlider) {
+      speedSlider.addEventListener('input', function () {
+        state.speechRate = parseFloat(this.value);
+        speedLabel.textContent = state.speechRate.toFixed(1) + 'x';
+        saveState();
+      });
+    }
 
     // ── Text-to-Speech ────────────────────────────────────────
     var speechStatus = document.getElementById('speech-status');
@@ -817,18 +826,44 @@
     function getSelectedText() {
       var sel = window.getSelection();
       if (sel && sel.toString().trim()) return sel.toString().trim();
-      return document.body.innerText.substring(0, 2000);
+      return document.body.textContent.substring(0, 2000);
+    }
+
+    function findVoice() {
+      var voices = window.speechSynthesis.getVoices();
+      var preferred = ['en-TZ', 'en-KE', 'en-UG', 'en-GH', 'en-ZA', 'en-GB', 'en-US'];
+      for (var i = 0; i < preferred.length; i++) {
+        var match = voices.filter(function (v) { return v.lang === preferred[i]; });
+        if (match.length) return match[0];
+      }
+      for (var j = 0; j < voices.length; j++) {
+        if (voices[j].lang.indexOf('en') === 0) return voices[j];
+      }
+      return null;
     }
 
     function speak(text) {
       window.speechSynthesis.cancel();
       speechUtterance = new SpeechSynthesisUtterance(text);
-      speechUtterance.rate = state.speechRate;
-      speechUtterance.lang = 'en-US';
+      var voice = findVoice('en-TZ');
+      if (voice) {
+        speechUtterance.voice = voice;
+        speechUtterance.lang = voice.lang;
+      } else {
+        speechUtterance.lang = 'en-TZ';
+      }
+      speechUtterance.rate = state.speechRate || 0.9;
+      speechUtterance.pitch = 1.0;
+      speechUtterance.volume = 1.0;
       speechUtterance.onstart = function () { speechStatus.textContent = 'Speaking...'; };
       speechUtterance.onend = function () { speechStatus.textContent = 'Done'; };
       speechUtterance.onerror = function () { speechStatus.textContent = 'Error'; };
       window.speechSynthesis.speak(speechUtterance);
+    }
+
+    if (window.speechSynthesis) {
+      window.speechSynthesis.onvoiceschanged = function () {};
+      window.speechSynthesis.getVoices();
     }
 
     document.getElementById('speech-play').addEventListener('click', function () {
@@ -876,8 +911,16 @@
           'Every teacher and student gets their own login. Learning analytics track progress in real time. ' +
           'Casuya is free, open-source, and built with love for Tanzanian education.';
         var utterance = new SpeechSynthesisUtterance(text);
-        utterance.rate = state.speechRate || 1;
-        utterance.lang = 'en-US';
+        var voice = findVoice('en-TZ');
+        if (voice) {
+          utterance.voice = voice;
+          utterance.lang = voice.lang;
+        } else {
+          utterance.lang = 'en-TZ';
+        }
+        utterance.rate = state.speechRate || 0.9;
+        utterance.pitch = 1.0;
+        utterance.volume = 1.0;
         utterance.onstart = function () {
           heroAudioBtn.classList.add('speaking');
           heroAudioLabel.textContent = 'Playing...';
