@@ -11,7 +11,7 @@ import { initAnalytics, analyticsOps } from './analytics';
 import { initSearch, searchOps } from './search';
 
 const app = express();
-const PORT = parseInt(process.env.CASUYA_SERVICES_BRIDGE_PORT || '3003', 10);
+const PORT = parseInt(process.env.PORT || process.env.CASUYA_SERVICES_BRIDGE_PORT || '3003', 10);
 
 app.use(helmet());
 app.use(cors());

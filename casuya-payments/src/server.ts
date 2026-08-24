@@ -6,7 +6,7 @@ import { initDb, runQuery, runSingle, runExec, generateId, now } from './databas
 import { AzamPayProvider } from '../providers/azampay/provider';
 
 const app: express.Express = express();
-const PORT = parseInt(process.env.CASUYA_PAYMENTS_PORT || '3002', 10);
+const PORT = parseInt(process.env.PORT || process.env.CASUYA_PAYMENTS_PORT || '3002', 10);
 
 const cache = new Map<string, { data: Record<string, unknown>; expires: number }>();
 function cacheGet(key: string): Record<string, unknown> | null {
