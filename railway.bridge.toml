@@ -1,0 +1,17 @@
+# Casuya Services Bridge — Railway Config (root monorepo)
+# Builds from monorepo root so workspace:* deps resolve
+# Bundles: auth, content, exams, media, analytics, search
+
+[build]
+builder = "dockerfile"
+dockerfilePath = "Dockerfile.bridge"
+
+[deploy]
+healthcheckPath = "/health"
+healthcheckTimeout = 100
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 10
+
+[env]
+NODE_ENV = "production"
+PORT = "8080"

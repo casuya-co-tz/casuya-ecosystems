@@ -1,0 +1,60 @@
+# Casuya Services Bridge — Root-level Dockerfile
+# Builds from monorepo root so workspace:* deps resolve
+# Deploys as a single Railway service bundling: auth, content, exams, media, analytics, search
+FROM node:20-alpine AS builder
+
+RUN corepack enable && corepack prepare pnpm@9 --activate
+
+WORKDIR /app
+
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
+COPY casuya-common/package.json casuya-common/package.json
+COPY casuya-math/package.json casuya-math/package.json
+COPY casuya-auth/package.json casuya-auth/package.json
+COPY casuya-content/package.json casuya-content/package.json
+COPY casuya-exams/package.json casuya-exams/package.json
+COPY casuya-media/package.json casuya-media/package.json
+COPY casuya-analytics/package.json casuya-analytics/package.json
+COPY casuya-search/package.json casuya-search/package.json
+COPY casuya-services-bridge/package.json casuya-services-bridge/package.json
+
+RUN pnpm install --frozen-lockfile
+
+COPY . .
+
+RUN pnpm --filter @casuya/common build \
+  && pnpm --filter casuya-math build \
+  && pnpm --filter @casuya/auth build \
+  && pnpm --filter casuya-content build \
+  && pnpm --filter casuya-exams build \
+  && pnpm --filter casuya-media build \
+  && pnpm --filter @casuya/analytics build \
+  && pnpm --filter casuya-search build \
+  && pnpm --filter casuya-services-bridge build
+
+FROM node:20-alpine AS runtime
+
+RUN corepack enable && corepack prepare pnpm@9 --activate
+
+WORKDIR /app
+ENV NODE_ENV=production
+
+COPY --from=builder /app/node_modules/ node_modules/
+COPY --from=builder /app/casuya-common/dist/ casuya-common/dist/
+COPY --from=builder /app/casuya-math/dist/ casuya-math/dist/
+COPY --from=builder /app/casuya-auth/dist/ casuya-auth/dist/
+COPY --from=builder /app/casuya-content/dist/ casuya-content/dist/
+COPY --from=builder /app/casuya-exams/dist/ casuya-exams/dist/
+COPY --from=builder /app/casuya-media/dist/ casuya-media/dist/
+COPY --from=builder /app/casuya-analytics/dist/ casuya-analytics/dist/
+COPY --from=builder /app/casuya-search/dist/ casuya-search/dist/
+COPY --from=builder /app/casuya-services-bridge/dist/ casuya-services-bridge/dist/
+COPY --from=builder /app/casuya-services-bridge/package.json casuya-services-bridge/package.json
+
+EXPOSE 8080
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
+  CMD node -e "require('http').get('http://localhost:8080/health', r => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))"
+
+WORKDIR /app/casuya-services-bridge
+CMD ["node", "dist/index.js"]
